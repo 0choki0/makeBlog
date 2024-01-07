@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ㅇㅇ의 블로그</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body>
+<!-- 네비게이션 바 -->
+<nav class="navbar navbar-expand-sm bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Home</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">내 블로그</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+</nav>
+
+<div class="container-lg">
+    <section class="float-end" style="width: 100%; margin-left: -250px; padding-left: 250px;">
+
+        <!-- 모든 글 -->
+        <article class="m-2 rounded-2" style="border: 2px solid black;">
+            <div class="d-flex gap-1 justify-content-between">
+                <p class="m-2">ㅇㅇ의 최신 글</p>
+                <button class="btn btn-primary ms-auto m-1" type="button" data-bs-toggle="collapse" data-bs-target="#postlist_category" aria-expanded="false" aria-controls="postlist_category">
+                    목록 열기
+                </button>
+            </div>
+            <div class="collapse" id="postlist_category">
+            <div class="list-group">
+                <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+                    <div class="d-flex">
+                        현재 글 제목
+                        <p class="ms-auto my-0" style="color: rgb(143, 143, 143);">글 생성 시간</p>
+                    </div>
+                </a>
+
+                <a href="#" class="list-group-item list-group-item-action">
+                    <div class="d-flex">
+                        글 제목
+                        <p class="ms-auto my-0" style="color: rgb(143, 143, 143);">글 생성 시간</p>
+                    </div>
+                </a>
+            </div>  
+
+            <!-- 페이지네이션 -->
+            <nav class="mt-auto">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                    </li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                    </li>
+                </ul>
+            </nav>
+
+            </div>
+        </article>
+
+        <!-- 현재 글 -->
+        <article class="m-2 p-1 rounded-2 d-flex" style="border: 2px solid black; flex-direction: column;">
+            <div class="m-2 rounded-2 d-flex" style="flex-direction: column;">
+                <div class="d-flex justify-content-between">
+                    <h4 class="fw-bold mt-1">현재 글 제목</h4>
+                    <div class="dropdown">
+                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">수정하기</a></li>
+                            <li><a class="dropdown-item" href="#">삭제하기</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center" style="width: 100%;">
+                    <div class="m-1" style="width: 30px; height: 30px; border-radius: 70%; overflow: hidden;">
+                        <img src="#" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="mx-2">
+                        <p class="m-0" style="font-size: 1rem;">블로그 주인 ID</p>
+                        <p class="m-0" style="font-size: 0.75rem; color: rgb(143, 143, 143);">업데이트 시간</p>
+                    </div>
+                    <a href="#" class="btn btn-secondary ms-auto" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">이웃버튼</a>
+                </div>
+                <hr>
+                <img src="" alt="">
+                <p> 글 내용 Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deserunt eum sed enim error quasi expedita soluta, quae, vero minus eveniet non adipisci velit ipsam. Aliquam recusandae aut porro mollitia soluta?Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deserunt eum sed enim error quasi expedita soluta, quae, vero minus eveniet non adipisci velit ipsam. Aliquam recusandae aut porro mollitia soluta? </p>
+                <hr class="mt-0">
+            </div>
+            
+            <!-- 댓글과 답글 -->
+            <div class="m-2">
+                <p class="d-inline-flex gap-1">
+                    <div class="btn-group" role="group" aria-label="">
+                        <button class="btn btn-outline-primary" data-bs-toggle="collapse" href="#likeusers" role="button" aria-expanded="false">
+                            공감
+                        </button>
+                        <button type="button" class="btn btn-outline-primary">
+                            <i class="bi bi-heart-fill heart align-self-center" style="color:red; font-size: 1rem;" data-post-id=""></i>
+                        </button>
+                    </div>
+                </p>
+
+                <div class="collapse" id="likeusers">
+                    <div class="overflow-auto">
+                        <div class="d-flex m-1 float-start" style="height: 30px; width: 200px;">
+                            <div style="width: 30px; height: 30px; border-radius: 70%; overflow: hidden;">
+                                <img src="" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                            <div class="mx-1">
+                                <p style="font-size: 0.75rem;">아이디</p>
+                            </div>
+                            <button type="button" class="btn btn-secondary ms-auto" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">이웃버튼</button>
+                        </div>
+                    </div>  
+                </div>
+            
+                <div>
+                    <hr>
+                    <!-- 댓글 -->
+                    <div class="d-flex align-items-center" style="width: 100%;">
+                        <div class="m-1" style="width: 30px; height: 30px; border-radius: 70%; overflow: hidden;">
+                            <img src="#" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="mx-2">
+                            <p class="m-0" style="font-size: 1rem;">댓글 단 유저 ID</p>
+                            <p class="m-0" style="font-size: 0.75rem; color: rgb(143, 143, 143);">댓글 업데이트 시간</p>
+                        </div>
+                        <div class="ms-auto my-0 py-0">
+                            <div class="ms-auto">
+                                <div class="dropdown">
+                                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                                    <ul class="dropdown-menu">
+                                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#commentModal">수정하기</button></li>
+                                        <li><button onclick="" class="dropdown-item" href="#">삭제하기</button></li>
+                                    </ul>
+                                </div>
+
+                                <!-- 댓글 모달 -->
+                                <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="">수정하기</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form>
+                                                <div class="mb-3">
+                                                    <p>작성자 : 작성자 ID</p>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="content" class="col-form-label">내용</label>
+                                                    <textarea class="form-control" id="">수정 되기 전 내용</textarea>
+                                                </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                                <button type="button" class="btn btn-primary" onclick="">수정</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="my-0 py-0 me-2">
+                                <i class="bi bi-heart-fill comment_heart align-self-center " style="color:red; font-size: 1rem;" data-post-id="" data-comment-id="" onclick="">N</i> 
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p class="mt-2 ms-1">댓글 내용 Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptates molestias a aliquid non repellat voluptatem odio eius sunt quisquam eligendi, sequi consectetur sit earum velit reiciendis harum corporis rem iste!</p>
+                    <div class="d-flex align-items-center" style="width: 100%;">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#writereply" aria-expanded="false" aria-controls="reply" style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .3rem; --bs-btn-font-size: .75rem;">답글</button>
+                    </div>
+            
+                    <div class="collapse" id="writereply">
+                        <form action="" method="POST" class="reply-Form">
+                            <div class="my-1">
+                                <label for="controlreply" class="form-label"></label>
+                                <textarea class="form-control" id="controlreply" rows="5" placeholder="답글을 입력해주세요"></textarea>
+                                <div class="d-flex">
+                                    <input type="submit" class="mt-2 ms-auto btn btn-secondary" value="답글 작성">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- reply -->
+                    <div class="ms-2">
+                        <div class="d-flex align-items-center" style="width: 100%;">
+
+                            <div class="m-1" style="width: 30px; height: 30px; border-radius: 70%; overflow: hidden;">
+                                <img src="" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+
+                            <div>
+                                <p class="m-0" style="font-size: 1rem;">답글을 단 유저 ID</p>
+                                <p class="m-0" style="font-size: 0.75rem; color: rgb(143, 143, 143);">답글 업데이트 시간</p>
+                            </div>
+
+                            <div class="dropdown ms-auto">
+                                <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                                <ul class="dropdown-menu">
+                                    <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#replyModal">수정하기</button></li>
+                                    <li><button onclick="" class="dropdown-item" href="#">삭제하기</button></li>
+                                </ul>
+                            </div>
+
+                            <!-- 답글 모달 -->
+                            <div class="modal fade" id="replyModal" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="replyModalLabel">수정하기</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                        <div class="mb-3">
+                                            <p>작성자 : 작성자 ID</p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="content" class="col-form-label">내용</label>
+                                            <textarea class="form-control" id="">수정 되기 전 내용</textarea>
+                                        </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                        <button type="button" class="btn btn-primary" onclick="">수정</button>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                
+            
+                        </div>
+                        <p class="ms-3">답글 내용 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Natus maxime recusandae commodi earum, quae odio eius reiciendis necessitatibus enim delectus? Fuga labore provident quod pariatur nulla eos alias? Sed, odio!</p>
+                    </div>
+                    <hr>
+
+                    <form action="" method="POST" class="comment-Form">
+                        <div class="my-1">
+                            <label for="controlcomment" class="form-label"></label>
+                            <textarea class="form-control" id="controlcomment" rows="5" placeholder="댓글을 입력해주세요"></textarea>
+                            <div class="d-flex">
+                                <input type="submit" class="mt-2 ms-auto btn btn-secondary" value="댓글 작성">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <script src="./comment&reply.js"></script>
+
+        </article>
+    </section>
+
+    <aside class="float-start" style="width: 240px;">
+        <!-- 블로그 주인의 프로필 -->
+        <div class="m-2 rounded-2" style="border: 2px solid rgb(0, 0, 0);">
+            <div class="my-2 mx-auto" style="width: 130px; height: 130px; border-radius: 70%; overflow: hidden;">
+                <img src="" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center px-1" style="width: 100%;">
+                <div class="mx-3">
+                    블로그 주인 ID
+                </div>
+                <button onclick="location.href=''" type="button" class="btn btn-primary ms-auto me-3" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: 0.75rem;">게시글 작성</button>
+            </div>
+            <div class="p-2 overflow-auto" style=" height: 15rem;">
+                소개를 적는 공간. 내용이 길어지면 자동으로 스크롤바가 생성됩니다. 
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore, veniam? 
+                Corporis ad commodi velit, quas, quidem quisquam praesentium magnam 
+                excepturi expedita aliquid culpa totam ea molestias delectus. Minus, 
+                dolorum nobis.
+            </div>
+        </div>
+
+        <!-- 블로그의 카테고리 -->
+        <div class="m-2 p-1 rounded-2" style="border: 2px solid rgb(0, 0, 0); height: 30rem;">
+            <div class="d-flex justify-content-between align-items-center">
+                <p class="ms-1 mb-0 fs-6 fw-bold">카테고리 리스트</p>
+                <a onclick="location.href=''" class="btn btn-secondary me-1" style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .2rem; --bs-btn-font-size: 0.75rem;">관리</a>
+            </div>
+            <div>
+                <a href="#" class="ms-3 my-0 mt-1 link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover">카테고리 이름</a>
+            </div>
+            <div>
+                <a href="#" class="ms-3 my-0 mt-1 link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover">카테고리 이름</a>
+            </div>
+            <div>
+                <a href="#" class="ms-3 my-0 mt-1 link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover">카테고리 이름</a>
+            </div>
+            <div>
+                <a href="#" class="ms-3 my-0 mt-1 link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover">카테고리 이름</a>
+            </div>
+            <div>
+                <a href="#" class="ms-3 my-0 mt-1 link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover">카테고리 이름</a>
+            </div>
+        </div>
+
+    </aside>
+</div>
+
+</body>
+</html>
