@@ -8,6 +8,6 @@ class User(AbstractUser):
         size = [200, 200],
         crop = ['middle', 'center'],
         upload_to = 'profile',
-        default = '/static/default.png',
+        default = 'profile/default.png',
     )
     

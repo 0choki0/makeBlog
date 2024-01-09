@@ -13,9 +13,9 @@
     {% include '_nav.html' %}
     <section class="container text-center">
         <div class="mt-5 py-5">
-            <h1 class="fw-bold">회원가입</h1>
+            <h1 class="fw-bold">로그인</h1>
         </div>
-        <form action="{% url 'accounts:signup' %}" class="row w-75 m-auto justify-content-center" method="POST" enctype="multipart/form-data">
+        <form action="{% url 'accounts:login' %}" class="row w-75 m-auto justify-content-center" method="POST">
             {% csrf_token %}
 
             {% if form.errors %}
@@ -47,27 +47,13 @@
 
             <div class="">
                 <div class="form-floating mb-3">
-                    <input type="password" class="form-control" name="password1" id="password1" placeholder="Password" required>
-                    <label for="password1">비밀번호</label>
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+                    <label for="password">비밀번호</label>
                 </div>
-            </div>
-
-            <div class="">
-                <div class="form-floating mb-3">
-                    <input type="password" class="form-control" name="password2" id="password2" placeholder="PasswordCheck" required>
-                    <label for="password2">비밀번호 확인</label>
-                </div>
-            </div>
-
-            <div class="text-start">
-                <div class="mb-3">
-                    <label for="profile_image" class="form-label">프로필 이미지</label>
-                    <input class="form-control" type="file" name="profile_image" id="profile_image">
-                  </div>
             </div>
 
             <div class="col-12 mt-5 text-end">
-                <button class="btn btn-primary" type="submit">제출</button>
+                <button class="btn btn-primary" type="submit">로그인</button>
             </div>
         </form>
     </section>

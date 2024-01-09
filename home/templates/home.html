@@ -22,11 +22,13 @@
         </section>
 
         <aside class="float-end" style="width: 240px;">
-            <!-- 로그인 후 보이는 프로필 창 -->
-            {% include 'aside/profile.html' %}
-
-            <!-- 로그인 전 보이는 창 -->
-            {% include 'aside/sign.html' %}
+            {% if user.is_anonymous %}
+                <!-- 로그인 전 보이는 창 -->
+                {% include 'aside/sign.html' %}
+            {% elif user.is_authenticated %}
+                <!-- 로그인 후 보이는 프로필 창 -->
+                {% include 'aside/profile.html' %}
+            {% endif %}
         </aside>
     </div>
 </body>
