@@ -19,8 +19,8 @@ from django.urls import path, include
 
 # home 과 main의 주소를 바꿀 예정 ('main/' <-> '')
 urlpatterns = [
-    path('', include('home.urls'), name='home'),
-    path('main/', include('main.urls'), name='main'),
+    path('home/', include('home.urls'), name='home'),
+    path('', include('main.urls'), name='main'),
     path('accounts/', include('accounts.urls'), name='accounts'),
     path('admin/', admin.site.urls),
 ]
