@@ -5,5 +5,6 @@ app_name = 'main'
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('<str:user_id>', views.main, name='main'),
+    path('<str:username>', views.main, name='main'),
+    path('<str:username>/create/', views.create, name='create'),
 ]

@@ -10,4 +10,9 @@ class User(AbstractUser):
         upload_to = 'profile',
         default = 'profile/default.png',
     )
+
+class Blog(models.Model):
+    owner = models.OneToOneField(User, on_delete=models.CASCADE)
     
+    def __str__(self):
+        return self.owner.username

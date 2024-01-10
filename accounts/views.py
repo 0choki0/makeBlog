@@ -9,10 +9,13 @@ from .models import *
 def signup(request):
     if request.method == 'POST':
         form = UserForm(request.POST, request.FILES)
-        if form.is_valid(): 
-            form.save()
+        if form.is_valid():
+            user = form.save()
+            user_blog = Blog(owner = user)
+            user_blog.save()
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password1')
+            user_blog.save()
             user = authenticate(username=username, password = password)
             auth_login(request, user)
             return redirect('home:home')
