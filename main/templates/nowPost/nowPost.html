@@ -2,8 +2,9 @@
     <div class="m-2 rounded-2 d-flex" style="flex-direction: column;">
         <div class="d-flex justify-content-between">
             <!-- 글 제목 -->
-            <h4 class="fw-bold mt-1">현재 글 제목</h4>
+            <h4 class="fw-bold mt-1">{{ post.title }}</h4>
 
+            {% if user.id == owner.id %}
             <!-- 수정 및 삭제 -->
             <div class="dropdown">
                 <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
@@ -12,18 +13,19 @@
                     <li><a class="dropdown-item" href="#">삭제하기</a></li>
                 </ul>
             </div>
+            {% endif %}
         </div>
 
         <div class="d-flex align-items-center" style="width: 100%;">
             <!-- 글 작성자 프로필 이미지 -->
             <div class="m-1" style="width: 30px; height: 30px; border-radius: 70%; overflow: hidden;">
-                <img src="#" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+                <img src="{{ owner.profile_image.url }}" alt="" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
 
             <!-- 글 작성자 아이디 및 작성 시간 -->
             <div class="mx-2">
-                <p class="m-0" style="font-size: 1rem;">블로그 주인 ID</p>
-                <p class="m-0" style="font-size: 0.75rem; color: rgb(143, 143, 143);">업데이트 시간</p>
+                <p class="m-0" style="font-size: 1rem;">{{ owner.username }}</p>
+                <p class="m-0" style="font-size: 0.75rem; color: rgb(143, 143, 143);">{{ post.updated_at }}</p>
             </div>
 
             <!-- 이웃 추가 및 삭제 버튼 -->
@@ -32,10 +34,12 @@
         <hr>
 
         <!-- Post 이미지 -->
-        <img src="" alt="">
+        {% if post.image %}
+            <img src="{{ post.image.url }}" alt="">
+        {% endif %}
 
         <!-- 글 내용 -->
-        <p> 글 내용 Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deserunt eum sed enim error quasi expedita soluta, quae, vero minus eveniet non adipisci velit ipsam. Aliquam recusandae aut porro mollitia soluta?Lorem ipsum, dolor sit amet consectetur adipisicing elit. Deserunt eum sed enim error quasi expedita soluta, quae, vero minus eveniet non adipisci velit ipsam. Aliquam recusandae aut porro mollitia soluta? </p>
+        <p> {{ post.content }} </p>
         <hr class="mt-0">
     </div>
     

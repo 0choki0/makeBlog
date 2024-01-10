@@ -2,29 +2,33 @@
     
     <!-- 최신 글 목록 열기 -->
     <div class="d-flex gap-1 justify-content-between">
-        <p class="m-2">ㅇㅇ의 최신 글</p>
+        <p class="m-2">{{ owner.username }}의 최신 글</p>
         <button class="btn btn-primary ms-auto m-1" type="button" data-bs-toggle="collapse" data-bs-target="#postlist_category" aria-expanded="false" aria-controls="postlist_category">
             목록 열기
         </button>
     </div>
     <div class="collapse" id="postlist_category">
 
+    {% for ownerpost in sorted_posts %}
     <!-- 최신 글 리스트 -->
     <div class="list-group">
+        {% if ownerpost.id == post.id %}
         <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
             <div class="d-flex">
-                현재 글 제목
-                <p class="ms-auto my-0" style="color: rgb(143, 143, 143);">글 생성 시간</p>
+                {{ ownerpost.title }}
+                <p class="ms-auto my-0" style="color: rgb(143, 143, 143);">{{ ownerpost.created_at }}</p>
             </div>
         </a>
-
+        {% else %}
         <a href="#" class="list-group-item list-group-item-action">
             <div class="d-flex">
-                글 제목
-                <p class="ms-auto my-0" style="color: rgb(143, 143, 143);">글 생성 시간</p>
+                {{ ownerpost.title }}
+                <p class="ms-auto my-0" style="color: rgb(143, 143, 143);">{{ ownerpost.created_at }}</p>
             </div>
         </a>
-    </div>  
+        {% endif %}
+    </div> 
+    {% endfor %}
 
     <!-- 페이지네이션 -->
     {% include './_pagination.html' %}

@@ -6,7 +6,7 @@ from accounts import models as accounts_model
 
 # Create your models here.
 class Category(models.Model):
-    owner = models.ForeignKey(accounts_model.Blog, on_delete=models.CASCADE)
+    owner = models.ForeignKey(accounts_model.User, on_delete=models.CASCADE)
     name = models.CharField(max_length=20)
 
     def __str__(self):
@@ -27,6 +27,8 @@ class Post(models.Model):
         size = [500, 500],
         crop = ['middle', 'center'],
         upload_to = 'image/%Y/%m',
+        blank=True,
+        null=True
     )
     tag = models.CharField(max_length=30, choices = TAG_CHOICES)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
