@@ -9,8 +9,8 @@
             <div class="dropdown">
                 <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">수정하기</a></li>
-                    <li><a class="dropdown-item" href="#">삭제하기</a></li>
+                    <li><a class="dropdown-item" href="{% url 'main:update' username=owner.username number=post.id %}">수정하기</a></li>
+                    <li><a class="dropdown-item" href="{% url 'main:delete' username=owner.username number=post.id %}">삭제하기</a></li>
                 </ul>
             </div>
             {% endif %}
@@ -29,7 +29,13 @@
             </div>
 
             <!-- 이웃 추가 및 삭제 버튼 -->
-            <a href="#" class="btn btn-secondary ms-auto" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">이웃버튼</a>
+            {% if user != post.user and user.is_authenticated %}
+                {% if user in post.user.followers.all %}
+                    <a href="{% url 'accounts:followsInDetail' username=post.user.username number=post.id %}" class="btn btn-secondary ms-auto" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">이웃해제</a>
+                {% else %}
+                    <a href="{% url 'accounts:followsInDetail' username=post.user.username number=post.id %}" class="btn btn-secondary ms-auto" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">이웃추가</a>
+                {% endif %}
+            {% endif %}
         </div>
         <hr>
 

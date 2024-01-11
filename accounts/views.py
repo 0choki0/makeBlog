@@ -45,3 +45,25 @@ def login(request):
 def logout(request):
     auth_logout(request)
     return redirect('home:home')
+
+def follows(request, username):
+    me = request.user
+    you = User.objects.get(username=username)
+
+    if you in me.followings.all():
+        me.followings.remove(you)
+    else:
+        me.followings.add(you)
+
+    return redirect('home:home')
+
+def followsInDetail(request, username, number):
+    me = request.user
+    you = User.objects.get(username=username)
+
+    if you in me.followings.all():
+        me.followings.remove(you)
+    else:
+        me.followings.add(you)
+
+    return redirect('main:detail', username=username, number=number)    

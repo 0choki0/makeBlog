@@ -10,6 +10,7 @@ class User(AbstractUser):
         upload_to = 'profile',
         default = 'profile/default.png',
     )
+    followings = models.ManyToManyField('self', related_name='followers', symmetrical=False)
 
 class Blog(models.Model):
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
