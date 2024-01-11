@@ -48,27 +48,4 @@
         <p> {{ post.content }} </p>
         <hr class="mt-0">
     </div>
-    
-    <!-- 공감 -->
-    {% include './likes.html' %}
-    <div class="m-2 my-0">
-        <hr>
-        <!-- 댓글(Read) -->
-        {% include './_comment.html' %}
-
-        <!-- 답글 -->
-        {% include './_reply.html' %}
-
-        <!-- 댓글(Create) -->
-        <form action="" method="POST" class="comment-Form">
-            <div class="my-1">
-                <label for="controlcomment" class="form-label"></label>
-                <textarea class="form-control" id="controlcomment" rows="5" placeholder="댓글을 입력해주세요"></textarea>
-                <div class="d-flex">
-                    <input type="submit" class="mt-2 ms-auto btn btn-secondary" value="댓글 작성">
-                </div>
-            </div>
-        </form>
-    </div>    
-    <script src="./comment&reply.js"></script>
 </article>

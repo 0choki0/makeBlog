@@ -15,6 +15,7 @@ class Category(models.Model):
     def get_absolute_url(self):
         return reverse('main:main')
 
+
 class Post(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default='1')
     TAG_CHOICES = [

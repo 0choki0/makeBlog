@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from .models import *
+from main.models import *
 
 # Create your views here.
 def signup(request):
@@ -12,10 +13,11 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             user_blog = Blog(owner = user)
-            user_blog.save()
+            std_category = Category.objects.create(owner=user, name='기본 카테고리')
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password1')
             user_blog.save()
+            
             user = authenticate(username=username, password = password)
             auth_login(request, user)
             return redirect('home:home')

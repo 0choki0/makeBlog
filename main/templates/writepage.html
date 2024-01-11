@@ -39,10 +39,10 @@
             <div class="rounded-2" style="height: 3.3rem; border: 2px solid rgb(0, 0, 0);">
                 <span class="text-start">
                     <label for="image" class="form-label"><i class="bi bi-image mx-2" style="font-size: 2rem;"></i></label>
-                    {% if request.post.image %}
-                    <input class="visually-hidden" type="file" id="image" name="image" value="{{ post.image.url }}">
+                    {% if post.image %}
+                    <input type="file" id="image" name="image" value="{{ post.image.url }}">
                     {% else %}
-                    <input class="visually-hidden" type="file" id="image" name="image" value="">
+                    <input type="file" id="image" name="image" value="{{ post.image.url }}">
                     {% endif %}
                 </span>
     
@@ -51,21 +51,27 @@
                 </span>
             </div>
 
-            <textarea name="title" id="title" class="mt-3 p-2 rounded-2" placeholder="글 제목을 입력해주세요" style="width: 100%; height:3rem; border: 2px solid rgb(0, 0, 0);">{{ post.title }}</textarea>
             <span class="d-flex text-start my-1">
-                <select class="form-select" aria-label="Default select" id="tag" name="tag" data-default-selected="{{ post.tag }}">
-                    <option disabled value="">태그를 선택해주세요.</option>
-                    <option value="RESTAURANT">맛집</option>
-                    <option value="HOBBY">취미</option>
-                </select>
+                <div class="form-group">
+                    <label for="category_id" class="my-1">카테고리</label>
+                    <select class="form-select" aria-label="Default select" id="category" name="category">
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{category.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-                <select class="form-select" aria-label="Default select" id="category" name="category" data-default-selected="{{ post.category }}">
-                    <option disabled value="">태그를 선택해주세요.</option>
-                    {% for category in categoryList %}
-                        <option value="{{category}}">{{category}}</option>
-                    {% endfor %}
-                </select>
+                <div class="form-group">
+                    <label for="tag" class="my-1">분류</label>
+                    <select class="form-select" aria-label="Default select" id="tag" name="tag" data-default-selected="{{ post.tag }}">
+                        <option value="RESTAURANT">맛집</option>
+                        <option value="HOBBY">취미</option>
+                    </select>
+                </div>
             </span>
+
+            <textarea name="title" id="title" class="mt-3 p-2 rounded-2" placeholder="글 제목을 입력해주세요" style="width: 100%; height:3rem; border: 2px solid rgb(0, 0, 0);">{{ post.title }}</textarea>
+
             <textarea name="content" id="content" class="mt-1 p-2 rounded-2" placeholder="글 내용을 입력해주세요." style="width: 100%; height:47rem; border: 2px solid rgb(0, 0, 0);">{{ post.content }}</textarea>
 
             <input type="hidden" name="user" id="user" value="{{ request.user.id }}"/>

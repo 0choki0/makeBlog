@@ -1,0 +1,213 @@
+#urls.py (19~28)
+path('<str:owner>/<int:number>/likes-async/', views.likes_async, name='likes-async'),
+
+path('<str:owner>/<int:number>/comments/create/', views.comment_create, name='comment_create'),
+path('<str:owner>/<int:number>/comments/<int:comment_id>/update/', views.comment_update, name='comment_update'),
+path('<str:owner>/<int:number>/comments/<int:comment_id>/delete/', views.comment_delete, name='comment_delete'),
+path('<str:owner>/<int:number>/comments/<int:comment_id>/likes-async/', views.comment_likes_async, name='comment-likes-async'),  
+
+path('<str:owner>/<int:number>/comments/<int:comment_id>/replys/create/', views.reply_create, name='reply_create'),
+path('<str:owner>/<int:number>/comments/<int:comment_id>/replys/<int:reply_id>/delete/', views.reply_delete, name='reply_delete'),
+path('<str:owner>/<int:number>/comments/<int:comment_id>/replys/<int:reply_id>/update/', views.reply_update, name='reply_update'),
+
+
+#nowPost.html(52~73)
+<!-- 공감 -->
+{% include './likes.html' %}
+<div class="m-2 my-0">
+    <hr>
+    <!-- 댓글(Read) -->
+    {% include './_comment.html' %}
+
+    <!-- 답글 -->
+    {% include './_reply.html' %}
+
+    <!-- 댓글(Create) -->
+    <form action="" method="POST" class="comment-Form">
+        <div class="my-1">
+            <label for="controlcomment" class="form-label"></label>
+            <textarea class="form-control" id="controlcomment" rows="5" placeholder="댓글을 입력해주세요"></textarea>
+            <div class="d-flex">
+                <input type="submit" class="mt-2 ms-auto btn btn-secondary" value="댓글 작성">
+            </div>
+        </div>
+    </form>
+</div>    
+<script src="./_comment&reply.js"></script>
+
+#likes.html(1~36)
+<!-- 공감 -->
+{% include './likes.html' %}
+<div class="m-2 my-0">
+    <hr>
+    <!-- 댓글(Read) -->
+    {% include './_comment.html' %}
+
+    <!-- 답글 -->
+    {% include './_reply.html' %}
+
+    <!-- 댓글(Create) -->
+    <form action="" method="POST" class="comment-Form">
+        <div class="my-1">
+            <label for="controlcomment" class="form-label"></label>
+            <textarea class="form-control" id="controlcomment" rows="5" placeholder="댓글을 입력해주세요"></textarea>
+            <div class="d-flex">
+                <input type="submit" class="mt-2 ms-auto btn btn-secondary" value="댓글 작성">
+            </div>
+        </div>
+    </form>
+</div>    
+<script src="./_comment&reply.js"></script>
+
+#_comment.html(1~65)
+<div class="d-flex align-items-center" style="width: 100%;">
+
+    <!-- 댓글 단 유저 프로필 이미지 -->
+    <div class="m-1" style="width: 30px; height: 30px; border-radius: 70%; overflow: hidden;">
+        <img src="{{ comment.user.profile_image.url }}" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
+
+    <!-- 댓글 단 유저 아이디 및 작성 시간 -->
+    <div class="mx-2">
+        <p class="m-0" style="font-size: 1rem;">{{ comment.user }}</p>
+        <p class="m-0" style="font-size: 0.75rem; color: rgb(143, 143, 143);">{{ comment.updated_at }}</p>
+    </div>
+    
+    <div class="ms-auto my-0 py-0">
+        <div class="ms-auto">
+            {% if user == comment.user %}
+                <!-- 수정 및 삭제 드롭다운 -->
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                    <ul class="dropdown-menu">
+                        <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#commentModal{{ post.id }}-{{ comment.id }}">수정하기</button></li>
+                        <li><button onclick="commentDelete('{{post.id}},{{comment.id}}');" class="dropdown-item" href="#">삭제하기</button></li>
+                    </ul>
+                </div>
+
+            <!-- 댓글 모달 -->
+            {% include './_commentModal.html' %}
+            {% else %}
+                <div class="dropdown">
+                    <button class="btn dropdown-toggle" type="button" style="visibility: hidden;"></button>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- 공감 -->
+        <div class="my-0 py-0 me-2">
+            {% if user in comment.like_users.all %}
+                <i class="bi bi-heart-fill comment_heart align-self-center " style="color:red; font-size: 1rem;" data-post-id="{{ post.id }}" data-comment-id="{{ comment.id }}" onclick="comment_likeRequest(this, '{{ post.id }}', '{{ comment.id }}')">{{ comment.like_users.all|length }}</i> 
+            {% else %}
+                <i class="bi bi-heart comment_heart align-self-center" style="font-size: 1rem;" data-post-id="{{ post.id }}" data-comment-id="{{ comment.id }}" onclick="comment_likeRequest(this, '{{ post.id }}', '{{ comment.id }}')">{{ comment.like_users.all|length }}</i>                
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- 답글 내용 -->
+<p class="mt-2 ms-1">{{ comment.content }}</p>
+
+<!-- 답글 작성 버튼 -->
+<div class="d-flex align-items-center" style="width: 100%;">
+    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#reply-list-{{ post.id }}-{{ comment.id }}" aria-expanded="false" aria-controls="reply" style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .3rem; --bs-btn-font-size: .75rem;">답글</button>
+</div>
+
+<!-- 답글 작성 form -->
+<div class="collapse" id="reply-list-{{ post.id }}-{{ comment.id }}">
+    {% if user.is_authenticated %}
+    <form action="{% url 'main:reply_create' number=number comment_id=comment.id %}" method="POST" class="reply-Form">
+        {% csrf_token %}
+        {{ reply_form }}
+        <div class="mt-3 d-flex">
+            <input type="submit" class="ms-auto btn btn-secondary" value="답글 작성">
+        </div>
+    </form>
+    {% endif %}
+</div>
+
+#_commentModal.html(1~25)
+<div class="modal fade" id="commentModal{{ post.id }}-{{ comment.id }}" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="commentModalLabel">수정하기</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+            <div class="mb-3">
+                <p>작성자 : {{ comment.user }}</p>
+            </div>
+            <div class="mb-3">
+                <label for="content" class="col-form-label">내용</label>
+                <textarea class="form-control commentContent{{ post.id }}-{{ comment.id }}" id="comment-content">{{ comment.content }}</textarea>
+            </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            <button type="button" class="btn btn-primary" onclick="commentUpdate('{{post.id}},{{comment.id}}')">수정</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+#_reply.html(1~30)
+<div class="ms-2">
+    {% for reply in comment.reply_set.all %}
+    <div class="d-flex align-items-center" style="width: 100%;">
+        <div class="m-1" style="width: 30px; height: 30px; border-radius: 70%; overflow: hidden;">
+            <img src="{{ reply.user.profile_image.url }}" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+
+        <div>
+            <p class="m-0" style="font-size: 1rem;">{{ reply.user }}</p>
+            <p class="m-0" style="font-size: 0.75rem; color: rgb(143, 143, 143);">답글 업데이트 시간</p>
+        </div>
+
+        {% if user == reply.user %}
+            <div class="dropdown ms-auto">
+                <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                <ul class="dropdown-menu">
+                    <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#replyModal{{ post.id }}-{{ comment.id }}-{{ reply.id }}">수정하기</button></li>
+                    <li><button onclick="replyDelete('{{post.id}},{{comment.id}},{{reply.id}}');" class="dropdown-item" href="#">삭제하기</button></li>
+                </ul>
+            </div>
+
+            <!-- 답글 모달 -->
+            {% include './_replyModal.html' %}
+        {% endif %}
+    </div>
+    <p class="ms-3">{{ reply.content }}</p>
+    {% endfor %}
+</div>
+<hr>
+{% endfor %}
+
+#_replyModal.html(1~25)
+<div class="modal fade" id="replyModal{{ post.id }}-{{ comment.id }}-{{ reply.id }}" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="replyModalLabel">수정하기</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+            <div class="mb-3">
+                <p>작성자 : {{ reply.user }}</p>
+            </div>
+            <div class="mb-3">
+                <label for="content" class="col-form-label">내용</label>
+                <textarea class="form-control replyContent{{ post.id }}-{{ comment.id }}-{{ reply.id }}" id="reply-content">{{ reply.content }}</textarea>
+            </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            <button type="button" class="btn btn-primary" onclick="replyUpdate('{{post.id}},{{comment.id}},{{reply.id}}')">수정</button>
+        </div>
+        </div>
+    </div>
+</div>
