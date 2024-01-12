@@ -40,9 +40,7 @@
                 <span class="text-start">
                     <label for="image" class="form-label"><i class="bi bi-image mx-2" style="font-size: 2rem;"></i></label>
                     {% if post.image %}
-                    <input type="file" id="image" name="image" value="{{ post.image.url }}">
-                    {% else %}
-                    <input type="file" id="image" name="image" value="{{ post.image.url }}">
+                        <input type="file" id="image" name="image" value="{{ post.image.url }}">
                     {% endif %}
                 </span>
     
