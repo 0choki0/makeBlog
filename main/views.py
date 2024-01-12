@@ -83,6 +83,8 @@ def delete(request, username, number):
 
 @login_required
 def update(request, username, number):
+    owner = User.objects.get(username=username)
+    categories = Category.objects.filter(owner_id=owner.id)
     post = Post.objects.get(id=number)
     if request.user != post.user:
         return redirect('main:detail', username=username, number=number)
@@ -100,6 +102,7 @@ def update(request, username, number):
     context = {
         'form': form,
         'post': post,
+        'categories': categories,
     }
     return render(request, 'writepage.html', context)
 
