@@ -60,7 +60,7 @@ def create(request, username):
 
 def detail(request, username, category, number):
     owner = User.objects.get(username=username)
-    postlist = Post.objects.filter(category__name=category)
+    postlist = Post.objects.filter(category__name=category, user_id=owner.id)
     sorted_posts = postlist.all().order_by('-created_at')
     post = postlist.get(id=number)
     categories = Category.objects.filter(owner_id=owner.id)
