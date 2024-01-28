@@ -13,14 +13,14 @@
     <div class="list-group">
         {% for ownerpost in sorted_posts %}
             {% if ownerpost.id == post.id %}
-            <a href="" class="list-group-item list-group-item-action active" aria-current="true">
+            <a href="{% url 'main:detail' username=owner.username category=ownerpost.category.name number=ownerpost.id %}" class="list-group-item list-group-item-action active" aria-current="true">
                 <div class="d-flex">
                     {{ ownerpost.title }}
                     <p class="ms-auto my-0" style="color: rgb(143, 143, 143);">{{ ownerpost.created_at }}</p>
                 </div>
             </a>
             {% else %}
-            <a href="{% url 'main:detail' username=owner.username number=ownerpost.id %}" class="list-group-item list-group-item-action">
+            <a href="{% url 'main:detail' username=owner.username category=ownerpost.category.name number=ownerpost.id %}" class="list-group-item list-group-item-action">
                 <div class="d-flex">
                     {{ ownerpost.title }}
                     <p class="ms-auto my-0" style="color: rgb(143, 143, 143);">{{ ownerpost.created_at }}</p>

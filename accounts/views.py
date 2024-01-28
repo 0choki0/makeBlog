@@ -59,13 +59,14 @@ def follows(request, username):
 
     return redirect('home:home')
 
-def followsInDetail(request, username, number):
+def followsInDetail(request, username, category, number):
     me = request.user
     you = User.objects.get(username=username)
+    category = category
 
     if you in me.followings.all():
         me.followings.remove(you)
     else:
         me.followings.add(you)
 
-    return redirect('main:detail', username=username, number=number)    
+    return redirect('main:detail', username=username, category=category, number=number)    

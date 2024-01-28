@@ -18,12 +18,17 @@ def main(request, username):
     sorted_posts = postlist.all().order_by('-created_at')
     post = sorted_posts.first()
     categories = Category.objects.filter(owner_id=owner.id)
-    categoryList = list(set(category.name for category in categories))
+    categoryList = {}
+    for category in categories:
+        if category not in categoryList.keys():
+            categoryList[category] = Post.objects.filter(category__name=category).order_by('-id').first().id
+    category_items = list(categoryList.items())
     context = {
         'owner':owner,
         'postlist':postlist,
         'sorted_posts':sorted_posts,
         'categoryList':categoryList,
+        'category_items': category_items,
         'post':post,
     }
     return render(request, 'main.html', context)
@@ -42,7 +47,7 @@ def create(request, username):
             post.user = request.user
             post.category_id = request.POST.get('category')
             post.save()
-            return redirect('main:detail', username=username, number=post.id)
+            return redirect('main:detail', username=username, category=post.category.name ,number=post.id)
     else:
         form = PostForm()
     
@@ -53,13 +58,18 @@ def create(request, username):
     }
     return render(request, 'writepage.html', context)
 
-def detail(request, username, number):
+def detail(request, username, category, number):
     owner = User.objects.get(username=username)
-    postlist = Post.objects.filter(user_id=owner.id)
+    postlist = Post.objects.filter(category__name=category)
     sorted_posts = postlist.all().order_by('-created_at')
     post = postlist.get(id=number)
     categories = Category.objects.filter(owner_id=owner.id)
-    categoryList = list(set(category.name for category in categories))
+    categoryList = {}
+    for category in categories:
+        if category not in categoryList.keys():
+            categoryList[category] = Post.objects.filter(category__name=category).order_by('-id').first().id
+    category_items = list(categoryList.items())
+
     comment_form = CommentForm()
     reply_form = ReplyForm()
     context = {
@@ -68,13 +78,14 @@ def detail(request, username, number):
         'sorted_posts':sorted_posts,
         'post':post,
         'categoryList':categoryList,
+        'category_items': category_items,
         'comment_form':comment_form,
         'reply_form':reply_form,
     }
     return render(request, 'detail.html', context)
 
 @login_required
-def delete(request, username, number):
+def delete(request, username, category, number):
     post = Post.objects.get(id=number)
     if request.user == post.user:
         post.delete()
@@ -82,12 +93,12 @@ def delete(request, username, number):
     return redirect('main:main', username=username)
 
 @login_required
-def update(request, username, number):
+def update(request, username, category, number):
     owner = User.objects.get(username=username)
     categories = Category.objects.filter(owner_id=owner.id)
     post = Post.objects.get(id=number)
     if request.user != post.user:
-        return redirect('main:detail', username=username, number=number)
+        return redirect('main:detail', username=username, category=post.category.name, number=number)
 
     if request.method == 'POST':
         form = PostForm(request.POST, instance=post)
@@ -95,7 +106,7 @@ def update(request, username, number):
             post = form.save(commit=False)
             post.user = request.user
             post.save()
-            return redirect('main:detail', username=username, number=number)
+            return redirect('main:detail', username=username, category=post.category.name, number=number)
     else:
         form = PostForm(instance=post)
 
