@@ -7,6 +7,7 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 import json
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
+from django.core.paginator import Paginator
 
 # Create your views here.
 def home(request):
@@ -17,19 +18,29 @@ def main(request, username):
     postlist = Post.objects.filter(user_id=owner.id)
     sorted_posts = postlist.all().order_by('-created_at')
     post = sorted_posts.first()
+
+    page = request.GET.get('page_posts','1')
+    paginator = Paginator(sorted_posts, 4)
+    page_obj = paginator.get_page(page)
+
     categories = Category.objects.filter(owner_id=owner.id)
     categoryList = {}
     for category in categories:
         if category not in categoryList.keys():
-            categoryList[category] = Post.objects.filter(category__name=category).order_by('-id').first().id
+            categoryList[category] = Post.objects.filter(category__name=category, user_id=owner.id).order_by('-id').first().id
     category_items = list(categoryList.items())
+
+    comment_form = CommentForm()
+    reply_form = ReplyForm()
     context = {
         'owner':owner,
         'postlist':postlist,
-        'sorted_posts':sorted_posts,
+        'sorted_posts':page_obj,
         'categoryList':categoryList,
         'category_items': category_items,
         'post':post,
+        'comment_form':comment_form,
+        'reply_form':reply_form,
     }
     return render(request, 'main.html', context)
 
@@ -63,19 +74,25 @@ def detail(request, username, category, number):
     postlist = Post.objects.filter(category__name=category, user_id=owner.id)
     sorted_posts = postlist.all().order_by('-created_at')
     post = postlist.get(id=number)
+
+    page = request.GET.get('page_posts','1')
+    paginator = Paginator(sorted_posts, 4)
+    page_obj = paginator.get_page(page)
+
     categories = Category.objects.filter(owner_id=owner.id)
     categoryList = {}
     for category in categories:
         if category not in categoryList.keys():
-            categoryList[category] = Post.objects.filter(category__name=category).order_by('-id').first().id
+            categoryList[category] = Post.objects.filter(category__name=category, user_id=owner.id).order_by('-id').first().id
     category_items = list(categoryList.items())
 
     comment_form = CommentForm()
     reply_form = ReplyForm()
     context = {
         'owner':owner,
+        'username':username,
         'postlist':postlist,
-        'sorted_posts':sorted_posts,
+        'sorted_posts':page_obj,
         'post':post,
         'categoryList':categoryList,
         'category_items': category_items,
@@ -155,7 +172,7 @@ def Delete_category(request, username):
     return redirect('main:category', username=username)
 
 @login_required
-def likes_async(request, owner, number):
+def likes_async(request, username, category, number):
     user = request.user
     post = Post.objects.get(id=number)
 
@@ -170,35 +187,37 @@ def likes_async(request, owner, number):
     context = {
         'status': status,
         'count': len(post.like_users.all()),
-        'owner': owner,
+        'username': username,
+        'category': category,
+        'number': number,
     }
     return JsonResponse(context)
 
 @login_required
-def comment_create(request, owner, number):
+def comment_create(request, username, number):
     comment_form = CommentForm(request.POST)
     if comment_form.is_valid():
         comment = comment_form.save(commit=False)
         comment.user = request.user
         comment.post_id = number
         comment.save()
+
     context = {
         'id': comment.id,
         'postId': number,
         'username': comment.user.username,
         'content': comment.content,
-        'owner': owner,
     }
 
     return JsonResponse(context)
 
 
 @login_required
-def comment_update(request, owner, number, comment_id):
-    comment = Comment.objects.get(id=comment_id)
+def comment_update(request, username, number,  comment_number):
+    comment = Comment.objects.get(id=comment_number)
 
     if request.user != comment.user:
-        return redirect('main:detail', owner=owner, number=number, comment_id=comment_id)
+        return redirect('main:detail', username=username, number=number, comment_id=comment_number)
     
     if request.method == 'POST':
         comment.content = request.POST.get('comment_content')

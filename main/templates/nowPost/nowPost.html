@@ -48,4 +48,14 @@
         <p> {{ post.content }} </p>
         <hr class="mt-0">
     </div>
+
+    <div class="m-2">
+        {% include 'nowPost/likes.html' %}
+        <div class="collapse" id="comment">
+            <hr>
+        <!-- {% include 'nowPost/_comment.html' %}
+        {% include 'nowPost/_reply.html' %} -->
+        </div>
+    </div>
 </article>
+<script src="./_comment&reply.js"></script>
