@@ -27,7 +27,11 @@ def main(request, username):
     categoryList = {}
     for category in categories:
         if category not in categoryList.keys():
-            categoryList[category] = Post.objects.filter(category__name=category, user_id=owner.id).order_by('-id').first().id
+            if Post.objects.filter(category__name=category, user_id=owner.id).order_by('-id').first() == None:
+                categoryList[category] = 1
+            else:
+                categoryList[category] = Post.objects.filter(category__name=category, user_id=owner.id).order_by('-id').first().id
+
     category_items = list(categoryList.items())
 
     comment_form = CommentForm()
@@ -73,7 +77,10 @@ def detail(request, username, category, number):
     owner = User.objects.get(username=username)
     postlist = Post.objects.filter(category__name=category, user_id=owner.id)
     sorted_posts = postlist.all().order_by('-created_at')
-    post = postlist.get(id=number)
+    if not postlist.filter(id=number).exists():
+        return redirect('main:main', username=username)
+    else:
+        post = postlist.get(id=number)
 
     page = request.GET.get('page_posts','1')
     paginator = Paginator(sorted_posts, 4)
@@ -83,7 +90,10 @@ def detail(request, username, category, number):
     categoryList = {}
     for category in categories:
         if category not in categoryList.keys():
-            categoryList[category] = Post.objects.filter(category__name=category, user_id=owner.id).order_by('-id').first().id
+            if Post.objects.filter(category__name=category, user_id=owner.id).order_by('-id').first() == None:
+                categoryList[category] = 1
+            else:
+                categoryList[category] = Post.objects.filter(category__name=category, user_id=owner.id).order_by('-id').first().id
     category_items = list(categoryList.items())
 
     comment_form = CommentForm()
