@@ -5,10 +5,22 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from .models import *
 from main.models import *
+from django.core.files import File
+from django.core.files.storage import default_storage
 
 # Create your views here.
 def signup(request):
     if request.method == 'POST':
+        # 사용자가 프로필 이미지를 설정하지 않았을 때
+        if not request.FILES.get('profile_image'):
+            default_image_path = 'static/img/default.png'
+            profile_image_path = 'profile/default.png'
+            
+            # 파일이 존재하지 않으면 복사
+            if not default_storage.exists(profile_image_path):
+                with open(default_image_path, 'rb') as default_image:
+                    default_storage.save(profile_image_path, File(default_image))  
+
         form = UserForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
