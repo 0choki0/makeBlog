@@ -28,14 +28,10 @@ replyForms.forEach(function(replyForm){
 
 
 // reply_delete
-function replyDelete(value) {
-    var valuesArray = value.split(',')
-    var reply_id = valuesArray[2];
-    var comment_id = valuesArray[1];
-    var post_id = valuesArray[0];
+function replyDelete(username, category, number, comment_id, reply_id) {
     $.ajax({
         type : 'POST',
-        url : `/posts/${post_id}/comments/${comment_id}/replys/${reply_id}/delete/`,
+        url : `/${username}/${category}/${number}/comments/${comment_id}/replys/${reply_id}/delete/`,
         dataType : 'json',
         data : {
             'reply_id' : reply_id,

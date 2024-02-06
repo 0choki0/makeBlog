@@ -14,8 +14,7 @@ commentForms.forEach(function(commentForm){
             const newComment = `
                 ${comment.username} : ${comment.content}
                 <i class="bi bi-heart comment_heart" data-post-id="${comment.postId}" data-comment-id="${comment.id}" onclick="comment_likeRequest(this, '${comment.postId}', '${comment.id}')">0명이 좋아합니다.</i>
-                <button class="btn btn-light" onclick="commentDelete('${comment.postId},${comment.id}');">Delete</button>
-            </div>`;
+                <button class="btn btn-light" onclick="commentDelete('${comment.postId},${comment.id}');">Delete</button>`;
             commentList.insertAdjacentHTML('beforeEnd', newComment)
             event.target.reset()
         })
@@ -23,21 +22,16 @@ commentForms.forEach(function(commentForm){
 })
 
 // comment update
-function commentUpdate(value) {
-    var valuesArray = value.split(',')
-    var comment_id = valuesArray[1];
-    var post_id = valuesArray[0];
-    var commentContent = $('.commentContent'+post_id+'-'+comment_id).val();
-    // console.log(commentContent, valuesArray)
-
+function commentUpdate(username, category, number, comment_id) {
     $.ajax({
         type: 'POST',
-        url: `/posts/${post_id}/comments/${comment_id}/update/`,
+        url: `/${username}/${category}/${number}/comments/${comment_id}/update/`,
         dataType : 'json',
         data: {
+            'username': username,
+            'category': category,
+            'number': number,
             'comment_id': comment_id,
-            'post_id': post_id,
-            'comment_content': commentContent,
             'csrfmiddlewaretoken': '{{ csrf_token }}',
         },
         success: function(response) {
@@ -48,17 +42,16 @@ function commentUpdate(value) {
 }
 
 // comment_delete
-function commentDelete(value) {
-    var valuesArray = value.split(',')
-    var comment_id = valuesArray[1];
-    var post_id = valuesArray[0];
+function commentDelete(username, category, number, comment_id) {
     $.ajax({
         type : 'POST',
-        url : `/posts/${post_id}/comments/${comment_id}/delete/`,
+        url : `/${username}/${category}/${number}/comments/${comment_id}/delete/`,
         dataType : 'json',
         data : {
+            'username': username,
+            'category': category,
+            'number': number,
             'comment_id': comment_id,
-            'post_id': post_id,
             'csrfmiddlewaretoken': '{{csrf_token}}',
         },
         success: function(response){

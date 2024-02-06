@@ -1,0 +1,97 @@
+{% for comment in post.comment_set.all %}
+
+    <!-- comment -->
+    <div class="d-flex align-items-center" style="width: 100%;">
+        <div class="m-1" style="width: 30px; height: 30px; border-radius: 70%; overflow: hidden;">
+            <img src="{{ comment.user.profile_image.url }}" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        <div class="mx-2">
+            <p class="m-0" style="font-size: 1rem;">{{ comment.user }}</p>
+            <p class="m-0" style="font-size: 0.75rem; color: rgb(143, 143, 143);">{{ comment.updated_at }}</p>
+        </div>
+        <div class="ms-auto my-0 py-0">
+            <div class="ms-auto">
+                {% if user == comment.user %}
+                    <div class="dropdown">
+                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                        <ul class="dropdown-menu">
+                            <li><button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#commentModal{{ post.id }}-{{ comment.id }}">수정하기</button></li>
+                            <li><button onclick="commentDelete('{{owner.username}}','{{post.category.name}}','{{post.id}}','{{comment.id}}');" class="dropdown-item" href="#">삭제하기</button></li>
+                        </ul>
+                    </div>
+                    {% include 'nowPost/commentModal.html' %}
+                {% else %}
+                    <div class="dropdown">
+                        <button class="btn dropdown-toggle" type="button" style="visibility: hidden;"></button>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="my-0 py-0 me-2">
+                <button type="button" class="btn btn-outline-primary" id="like-button-{{ post.id }}-{{ comment.id }}" data-username="{{ username }}" data-category="{{ category }}">
+                {% if user in comment.like_users.all %}
+                    <i class="bi bi-heart-fill comment_heart align-self-center " style="color:red; font-size: 1rem;" data-post-id="{{ post.id }}" data-comment-id="{{ comment.id }}" onclick="comment_likeRequest(this, '{{ post.id }}', '{{ comment.id }}')">{{ comment.like_users.all|length }}</i> 
+                {% else %}
+                    <i class="bi bi-heart comment_heart align-self-center" style="font-size: 1rem;" data-post-id="{{ post.id }}" data-comment-id="{{ comment.id }}" onclick="comment_likeRequest(this, '{{ post.id }}', '{{ comment.id }}')">{{ comment.like_users.all|length }}</i>                
+                {% endif %}
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <p class="mt-2 ms-1">{{ comment.content }}</p>
+    <div class="d-flex align-items-center" style="width: 100%;">
+        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="collapse" data-bs-target="#reply-list-{{ post.id }}-{{ comment.id }}" aria-expanded="false" aria-controls="reply" style="--bs-btn-padding-y: 0rem; --bs-btn-padding-x: .3rem; --bs-btn-font-size: .75rem;">답글</button>
+    </div>
+
+    <div class="collapse" id="reply-list-{{ post.id }}-{{ comment.id }}">
+        {% if user.is_authenticated %}
+        <form action="{% url 'main:reply_create' username=owner.username category=post.category.name number=post.id comment_id=comment.id %}" method="POST" class="reply-Form">
+            {% csrf_token %}
+            {{ reply_form }}
+            <div class="mt-3 d-flex">
+                <input type="submit" class="ms-auto btn btn-secondary" value="답글 작성">
+            </div>
+        </form>
+        {% endif %}
+    </div>
+    <!-- reply -->
+    <div class="ms-2">
+        {% for reply in comment.reply_set.all %}
+        <div class="d-flex align-items-center" style="width: 100%;">
+            ㄴ
+            <div class="m-1" style="width: 30px; height: 30px; border-radius: 70%; overflow: hidden;">
+                <img src="{{ reply.user.profile_image.url }}" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+
+            <div>
+                <p class="m-0" style="font-size: 1rem;">{{ reply.user }}</p>
+                <p class="m-0" style="font-size: 0.75rem; color: rgb(143, 143, 143);">{{ reply.updated_at }}</p>
+            </div>
+            {% if user == reply.user %}
+                <div class="dropdown ms-auto">
+                    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                    <ul class="dropdown-menu">
+                        <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#replyModal{{ post.id }}-{{ comment.id }}-{{ reply.id }}">수정하기</button></li>
+                        <li><button onclick="replyDelete('{{owner.username}}','{{post.category.name}}','{{post.id}}','{{comment.id}}','{{reply.id}}');" class="dropdown-item" href="#">삭제하기</button></li>
+                    </ul>
+                </div>
+            {% include 'nowPost/replyModal.html' %}
+            {% endif %}
+
+        </div>
+        <p class="ms-3">{{ reply.content }}</p>
+        {% endfor %}
+    </div>
+    <hr>
+{% endfor %}
+
+{% if user.is_authenticated %}
+
+<form action="{% url 'main:comment_create' username=owner.username category=post.category.name number=post.id %}" method="POST" class="comment-Form">
+    {% csrf_token %}
+    {{ comment_form }}
+    <div class="mt-3 d-flex">
+        <input type="submit" class="ms-auto btn btn-secondary" value="댓글 작성">
+    </div>
+</form>
+{% endif %}

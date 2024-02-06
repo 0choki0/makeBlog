@@ -204,7 +204,8 @@ def likes_async(request, username, category, number):
     return JsonResponse(context)
 
 @login_required
-def comment_create(request, username, number):
+def comment_create(request, username, category, number):
+    owner = User.objects.get(username=username)
     comment_form = CommentForm(request.POST)
     if comment_form.is_valid():
         comment = comment_form.save(commit=False)
@@ -213,53 +214,57 @@ def comment_create(request, username, number):
         comment.save()
 
     context = {
-        'id': comment.id,
-        'postId': number,
-        'username': comment.user.username,
-        'content': comment.content,
+        'owner': owner,
+        'username': username,
+        'category': category,
+        'number': number,
+        'comment_username': comment.user.username,
+        'comment_content': comment.content,
     }
 
     return JsonResponse(context)
 
 
 @login_required
-def comment_update(request, username, number,  comment_number):
-    comment = Comment.objects.get(id=comment_number)
+def comment_update(request, username, category, number, comment_id):
+    comment = Comment.objects.get(id=comment_id)
 
     if request.user != comment.user:
-        return redirect('main:detail', username=username, number=number, comment_id=comment_number)
+        return redirect('main:detail', username=username, number=number)
     
     if request.method == 'POST':
         comment.content = request.POST.get('comment_content')
         comment.save()
         data = {
-        'comment_id': comment_id,
-        'post_id': owner,
+        'username': username,
+        'category': category,
         'number': number,
+        'comment_id': comment_id,
     }
 
     return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = 'application/json')
 
 
 @login_required
-def comment_delete(request, owner, number, comment_id):
+def comment_delete(request, username, category, number, comment_id):
     comment = Comment.objects.get(id=comment_id)
 
     if request.user != comment.user:
-        return redirect('main:detail', owner=owner, number=number, comment_id=comment_id)
+        return redirect('main:detail', username=username, category=category, number=number)
     
     else:
         comment.delete()
         data = {
-            'owner':owner,
-            'post_id': number,
+            'username': username,
+            'category': category,
+            'number': number,
             'comment_id' : comment_id,
         }
 
     return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = 'application/json')
 
 @login_required
-def comment_likes_async(request, owner, number, comment_id):
+def comment_likes_async(request, username, category, number, comment_id):
     user = request.user
     post = Post.objects.get(id=number)
     comment = Comment.objects.get(id=comment_id)
@@ -273,16 +278,17 @@ def comment_likes_async(request, owner, number, comment_id):
         status = True
 
     context = {
-        'owner': owner,
+        'username': username,
         'status': status,
+        'category': category,
+        'number': number,
+        'comment_id': comment_id,
         'count': len(comment.like_users.all()),
-        'number': post.id,
-        'comment_id': comment.id,
     }
     return JsonResponse(context)
 
 @login_required
-def reply_create(request, owner, number, comment_id):
+def reply_create(request, username, category, number, comment_id):
     reply_form = ReplyForm(request.POST)
     if reply_form.is_valid():
         reply = reply_form.save(commit=False)
@@ -291,49 +297,54 @@ def reply_create(request, owner, number, comment_id):
         reply.comment_id = comment_id
         reply.save()
     context = {
-        'owner': owner,
-        'id': reply.id,
-        'postId': number,
-        'commentId': comment_id,
-        'username': reply.user.username,
-        'content': reply.content,
+        'username': username,
+        'category': category,
+        'number': number,
+        'comment_id': comment_id,
+        'reply_username': reply.user.username,
+        'reply_content': reply.content,
         }
 
     return JsonResponse(context)
 
 
 @login_required
-def reply_delete(request, owner, number, comment_id, reply_id):
+def reply_delete(request, username, category, number, comment_id, reply_id):
     reply = Reply.objects.get(id=reply_id)
 
     if request.user != reply.user:
-        return redirect('main:home', owner=owner, number=number, comment_id=comment_id, reply_id=reply_id)
+        return redirect('main:detail', username=username, category=category, number=number)
     
     else:
         reply.delete()
         data = {
-            'reply_id': reply_id,
-            'post_id': number,
+            'username': username,
+            'category': category,
+            'number' : number,
             'comment_id' : comment_id,
+            'reply_id' : reply_id,
+
         }
     
     return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = 'application/json')
 
 
 @login_required
-def reply_update(request, owner, number, comment_id, reply_id):
+def reply_update(request, username, category, number, comment_id, reply_id):
     reply = Reply.objects.get(id=reply_id)
 
     if request.user != reply.user:
-        return redirect('posts:home')
+        return redirect('main:detail', username=username, category=category, number=number)
 
     if request.method == 'POST':
         reply.content = request.POST.get('reply_content')
         reply.save()
         data = {
-        'reply_id': id,
-        'post_id': number,
+        'username': username,
+        'category': category,
+        'number' : number,
         'comment_id' : comment_id,
+        'reply_id' : reply_id,
     }
 
     return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = 'application/json')

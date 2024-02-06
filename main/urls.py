@@ -16,6 +16,15 @@ urlpatterns = [
 
     path('<str:username>/<str:category>/<int:number>/likes-async/', views.likes_async, name='likes-async'),
 
+    path('<str:username>/<str:category>/<int:number>/comments/create/', views.comment_create, name='comment_create'),
+    path('<str:username>/<str:category>/<int:number>/comments/<int:comment_id>/update/', views.comment_update, name='comment_update'),
+    path('<str:username>/<str:category>/<int:number>/comments/<int:comment_id>/delete/', views.comment_delete, name='comment_delete'),
+    path('<str:username>/<str:category>/<int:number>/comments/<int:comment_id>/likes-async/', views.comment_likes_async, name='comment-likes-async'),  
+  
+    path('<str:username>/<str:category>/<int:number>/comments/<int:comment_id>/replys/create/', views.reply_create, name='reply_create'),
+    path('<str:username>/<str:category>/<int:number>/comments/<int:comment_id>/replys/<int:reply_id>/delete/', views.reply_delete, name='reply_delete'),
+    path('<str:username>/<str:category>/<int:number>/comments/<int:comment_id>/replys/<int:reply_id>/update/', views.reply_update, name='reply_update'),
+
     path('<str:username>/category', views.category, name='category'),
     path('<str:username>/category/create', views.Create_category, name='createCategory'),
     path('<str:username>/category/delete', views.Delete_category, name='deleteCategory'),
