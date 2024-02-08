@@ -15,7 +15,7 @@ def home(request):
 
     if request.user.is_authenticated:
         page_nb = request.GET.get('page_nb','1')
-        posts_nb = Post.objects.filter(user__in=request.user.followings.all())
+        posts_nb = Post.objects.filter(user__in=request.user.followings.all()).order_by('-created_at')
         paginator_nb = Paginator(posts_nb, 3)
         page_obj_nb = paginator_nb.get_page(page_nb)
 

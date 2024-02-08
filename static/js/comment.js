@@ -45,7 +45,7 @@ function commentUpdate(username, category, number, comment_id) {
 function commentDelete(username, category, number, comment_id) {
     $.ajax({
         type : 'POST',
-        url : `/${username}/${category}/${number}/comments/${comment_id}/delete/`,
+        url : `/${username}/${encodeURIComponent(category)}/${number}/comments/${comment_id}/delete/`,
         dataType : 'json',
         data : {
             'username': username,
@@ -61,10 +61,22 @@ function commentDelete(username, category, number, comment_id) {
 }
 
 // comment like 
-let comment_likeRequest = async (button, postId, commentId) => {
-    let likeURL = `/posts/${postId}/comments/${commentId}/likes-async/`;
+let comment_likeButtons = document.querySelectorAll("i.comment_heart")
+
+comment_likeButtons.forEach((comment_likeButton)=>{            
+    comment_likeButton.addEventListener("click", (event)=>{
+        let postId = event.target.dataset.postId
+        let commentId = event.target.dataset.commentId 
+        let username = event.target.closest(".btn").dataset.username
+        let category = event.target.closest(".btn").dataset.category 
+        comment_likeRequest(event.target, postId, username, category, commentId)
+    })
+})
+
+let comment_likeRequest = async (button, postId, username, category, commentId) => {
+    let comment_likeURL = `/${username}/${category}/${postId}/comments/${commentId}/likes-async/`;
     try {
-        let response = await fetch(likeURL);
+        let response = await fetch(comment_likeURL);
         let result = await response.json();
 
         if (result.status) {

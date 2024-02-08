@@ -4,7 +4,7 @@ likeButtons.forEach((likeButton)=>{
     likeButton.addEventListener("click", (event)=>{
         let postId = event.target.dataset.postId 
         let username = event.target.closest(".btn").dataset.username
-        let category = event.target.closest(".btn").dataset.name 
+        let category = event.target.closest(".btn").dataset.category
         likeRequest(event.target, postId, username, category)
     })
 })

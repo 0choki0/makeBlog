@@ -34,9 +34,11 @@ function replyDelete(username, category, number, comment_id, reply_id) {
         url : `/${username}/${category}/${number}/comments/${comment_id}/replys/${reply_id}/delete/`,
         dataType : 'json',
         data : {
-            'reply_id' : reply_id,
+            'username': username,
+            'category': category,
+            'number': number,
             'comment_id': comment_id,
-            'post_id': post_id,
+            'reply_id' : reply_id,
             'csrfmiddlewaretoken': '{{csrf_token}}',
         },
         success: function(response){
@@ -52,16 +54,17 @@ function replyUpdate(value) {
     var comment_id = valuesArray[1];
     var post_id = valuesArray[0];
     var replyContent = $('.replyContent'+post_id+'-'+comment_id+'-'+reply_id).val();
-    // console.log(replyContent, valuesArray)
 
     $.ajax({
         type: 'POST',
         url: `/posts/${post_id}/comments/${comment_id}/replys/${reply_id}/update/`,
         dataType : 'json',
         data: {
-            'reply_id' : reply_id,
+            'username': username,
+            'category': category,
+            'number': number,
             'comment_id': comment_id,
-            'post_id': post_id,
+            'reply_id' : reply_id,
             'reply_content': replyContent,
             'csrfmiddlewaretoken': '{{ csrf_token }}',
         },

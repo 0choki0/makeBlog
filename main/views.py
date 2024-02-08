@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from accounts.models import *
 from .models import *
 from accounts.forms import *
 from .forms import *
@@ -8,13 +9,18 @@ import json
 from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.paginator import Paginator
+from django.middleware.csrf import get_token
+from urllib.parse import quote, unquote
 
 # Create your views here.
 def home(request):
     return redirect('home:home')
 
 def main(request, username):
-    owner = User.objects.get(username=username)
+    try:
+        owner = User.objects.get(username=username)
+    except User.DoesNotExist:
+        return HttpResponse("Something went wrong.") 
     postlist = Post.objects.filter(user_id=owner.id)
     sorted_posts = postlist.all().order_by('-created_at')
     post = sorted_posts.first()
@@ -38,7 +44,9 @@ def main(request, username):
     reply_form = ReplyForm()
     context = {
         'owner':owner,
+        'username':username,
         'postlist':postlist,
+        'category':category,
         'sorted_posts':page_obj,
         'categoryList':categoryList,
         'category_items': category_items,
@@ -101,6 +109,7 @@ def detail(request, username, category, number):
     context = {
         'owner':owner,
         'username':username,
+        'category':category,
         'postlist':postlist,
         'sorted_posts':page_obj,
         'post':post,
@@ -240,6 +249,7 @@ def comment_update(request, username, category, number, comment_id):
         'category': category,
         'number': number,
         'comment_id': comment_id,
+        'csrfmiddlewaretoken': get_token(request),
     }
 
     return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = 'application/json')
@@ -259,6 +269,7 @@ def comment_delete(request, username, category, number, comment_id):
             'category': category,
             'number': number,
             'comment_id' : comment_id,
+            'csrfmiddlewaretoken': get_token(request),
         }
 
     return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = 'application/json')
@@ -323,6 +334,7 @@ def reply_delete(request, username, category, number, comment_id, reply_id):
             'number' : number,
             'comment_id' : comment_id,
             'reply_id' : reply_id,
+            'csrfmiddlewaretoken': get_token(request),
 
         }
     
@@ -345,6 +357,7 @@ def reply_update(request, username, category, number, comment_id, reply_id):
         'number' : number,
         'comment_id' : comment_id,
         'reply_id' : reply_id,
+        'csrfmiddlewaretoken': get_token(request),
     }
 
     return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = 'application/json')
