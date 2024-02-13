@@ -50,7 +50,7 @@ class Comment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.user + '/' + self.content[:20]
+        return self.content[:20]
 
 
 class Reply(models.Model):
@@ -62,4 +62,4 @@ class Reply(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.user + '/' + self.content[:20]
+        return self.content[:20]

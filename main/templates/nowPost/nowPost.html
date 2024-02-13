@@ -25,7 +25,7 @@
             <!-- 글 작성자 아이디 및 작성 시간 -->
             <div class="mx-2">
                 <p class="m-0" style="font-size: 1rem;">{{ owner.username }}</p>
-                <p class="m-0" style="font-size: 0.75rem; color: rgb(143, 143, 143);">{{ post.updated_at }}</p>
+                <p class="m-0" style="font-size: 0.75rem; color: rgb(143, 143, 143);">{{ post.updated_at|date:"Y년 n월 j일 A g:i" }}</p>
             </div>
 
             <!-- 이웃 추가 및 삭제 버튼 -->
@@ -51,11 +51,12 @@
 
     <div class="m-2">
         {% include 'nowPost/likes.html' %}
-        <div class="collapse show" id="comment">
+        <div class="collapse show comment-list" id="comment-list">
             <hr>
             {% include 'nowPost/comment&reply.html' %}
 
         </div>
+
         <script type="text/javascript" src="/static/js/likes.js"></script>
         <script type="text/javascript" src="/static/js/comment.js"></script>
         <script type="text/javascript" src="/static/js/reply.js"></script>

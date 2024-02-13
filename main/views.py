@@ -4,13 +4,10 @@ from .models import *
 from accounts.forms import *
 from .forms import *
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponse
 import json
-from django.core import serializers
 from django.core.serializers.json import DjangoJSONEncoder
 from django.core.paginator import Paginator
-from django.middleware.csrf import get_token
-from urllib.parse import quote, unquote
 
 # Create your views here.
 def home(request):
@@ -222,16 +219,22 @@ def comment_create(request, username, category, number):
         comment.post_id = number
         comment.save()
 
-    context = {
-        'owner': owner,
+    data = {
+        'owner': owner.username,
         'username': username,
         'category': category,
         'number': number,
+        'comment_user_id': comment.user.id,
+        'comment_user_profile_image_url': comment.user.profile_image.url,
         'comment_username': comment.user.username,
+        'comment_updated_at': comment.updated_at,
+        'comment_created_at': comment.created_at,
+        'comment_id': comment.id,
         'comment_content': comment.content,
+        'like_users': comment.like_users.count()
     }
 
-    return JsonResponse(context)
+    return JsonResponse(data)
 
 
 @login_required
@@ -239,20 +242,20 @@ def comment_update(request, username, category, number, comment_id):
     comment = Comment.objects.get(id=comment_id)
 
     if request.user != comment.user:
-        return redirect('main:detail', username=username, number=number)
+        return JsonResponse(status=403)
     
     if request.method == 'POST':
-        comment.content = request.POST.get('comment_content')
+        content = request.POST.get('content') 
+        comment.content = content
         comment.save()
         data = {
-        'username': username,
-        'category': category,
-        'number': number,
-        'comment_id': comment_id,
-        'csrfmiddlewaretoken': get_token(request),
-    }
+            'content': comment.content,
+            'updated_at': comment.updated_at.strftime('%Y-%m-%d %H:%M:%S')
 
-    return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = 'application/json')
+        }
+        return JsonResponse(data)
+    
+    return JsonResponse(status=405)
 
 
 @login_required
@@ -269,7 +272,6 @@ def comment_delete(request, username, category, number, comment_id):
             'category': category,
             'number': number,
             'comment_id' : comment_id,
-            'csrfmiddlewaretoken': get_token(request),
         }
 
     return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = 'application/json')
@@ -300,6 +302,7 @@ def comment_likes_async(request, username, category, number, comment_id):
 
 @login_required
 def reply_create(request, username, category, number, comment_id):
+    owner = User.objects.get(username=username)
     reply_form = ReplyForm(request.POST)
     if reply_form.is_valid():
         reply = reply_form.save(commit=False)
@@ -308,11 +311,17 @@ def reply_create(request, username, category, number, comment_id):
         reply.comment_id = comment_id
         reply.save()
     context = {
+        'owner': owner.username,
         'username': username,
         'category': category,
         'number': number,
-        'comment_id': comment_id,
+        'comment_id': reply.comment_id,
+        'reply_user_id': reply.user.id,
+        'reply_user_profile_image_url': reply.user.profile_image.url,
         'reply_username': reply.user.username,
+        'reply_updated_at': reply.updated_at,
+        'reply_created_at': reply.created_at,
+        'reply_id': reply.id,
         'reply_content': reply.content,
         }
 
@@ -334,8 +343,6 @@ def reply_delete(request, username, category, number, comment_id, reply_id):
             'number' : number,
             'comment_id' : comment_id,
             'reply_id' : reply_id,
-            'csrfmiddlewaretoken': get_token(request),
-
         }
     
     return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = 'application/json')
@@ -346,19 +353,16 @@ def reply_update(request, username, category, number, comment_id, reply_id):
     reply = Reply.objects.get(id=reply_id)
 
     if request.user != reply.user:
-        return redirect('main:detail', username=username, category=category, number=number)
+        return JsonResponse(status=403)
 
     if request.method == 'POST':
-        reply.content = request.POST.get('reply_content')
+        content = request.POST.get('content')
+        reply.content = content
         reply.save()
         data = {
-        'username': username,
-        'category': category,
-        'number' : number,
-        'comment_id' : comment_id,
-        'reply_id' : reply_id,
-        'csrfmiddlewaretoken': get_token(request),
-    }
+            'content': reply.content,
+            'updated_at': reply.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        return JsonResponse(data)
 
-    return HttpResponse(json.dumps(data, cls=DjangoJSONEncoder), content_type = 'application/json')
-    
+    return JsonResponse(status=405)
