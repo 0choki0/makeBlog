@@ -16,11 +16,47 @@
     </div>
 
     <!-- 소개 -->
-    <div class="p-2 overflow-auto" style=" height: 15rem;">
-        소개를 적는 공간. 내용이 길어지면 자동으로 스크롤바가 생성됩니다. 
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore, veniam? 
-        Corporis ad commodi velit, quas, quidem quisquam praesentium magnam 
-        excepturi expedita aliquid culpa totam ea molestias delectus. Minus, 
-        dolorum nobis.
-    </div>
+    {% if user.id == owner.id %}
+        <div class="p-2 overflow-auto editable-text" style="height: 15rem;">
+            <p data-url="{% url 'main:edit_introduce' username %}">
+                {{ owner.blog.introduce }}
+            </p>
+        </div>
+    {% else %}
+        <div class="p-2 overflow-auto" style="height: 15rem;">
+            <p>{{ owner.blog.introduce }}</p>
+        </div>
+    {% endif %}
+
+    <script>
+        $(document).ready(function() {
+            // 클릭 이벤트를 감지하여 텍스트 수정
+            $(document).on('click', '.editable-text', function() {
+                var introduceText = $(this).text().trim();
+                var introduceInput = '<textarea class="form-control editing-text" rows="3">' + introduceText + '</textarea>';
+                $(this).html(introduceInput).find('textarea').focus().on('keypress', function(event) {
+                    if (event.keyCode === 13) {
+                        event.preventDefault();
+                        var newText = $(this).val().trim();
+                        var url = $(this).parent().data('url');
+                        $.ajax({
+                            type: 'POST',
+                            url: url,
+                            data: {
+                                'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val(),
+                                'introduce': newText,
+                            },
+                            success: function(response) {
+                                $('.editable-text').text(newText);
+                            },
+                            error: function(xhr, errmsg, err) {
+                                console.error(xhr.status + ': ' + xhr.responseText);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
 </div>

@@ -32,6 +32,7 @@ class User(AbstractUser):
 
 class Blog(models.Model):
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
+    introduce = models.TextField(max_length=300, default='나를 소개합니다.')
     
     def __str__(self):
         return self.owner.username

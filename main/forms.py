@@ -1,11 +1,17 @@
 from django import forms
 from .models import *
+from accounts.models import *
 
 # 포스트 작성 폼
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ('title', 'content', 'image', 'tag', 'category',)
+
+class EditIntroduceForm(forms.Form):
+    class Meta:
+        model = Blog
+        fields = ('introduce')
 
 # 댓글 작성 폼
 class CommentForm(forms.ModelForm):
