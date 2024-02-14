@@ -17,10 +17,11 @@
 
     <!-- 소개 -->
     {% if user.id == owner.id %}
-        <div class="p-2 overflow-auto editable-text" style="height: 15rem;">
-            <p data-url="{% url 'main:edit_introduce' username %}">
-                {{ owner.blog.introduce }}
-            </p>
+        <div class="p-2 overflow-auto editable-text d-flex flex-column" style="height: 15rem;">
+            <p>{{ owner.blog.introduce }}</p>
+            <textarea class="form-control" data-url="{% url 'main:edit_introduce' username %}" style="display: none; height: 11rem;"></textarea>
+            <button class="btn btn-primary edit-btn float-end mt-auto">소개 수정</button>
+            <button class="btn btn-success submit-btn float-end mt-auto" style="display: none;">제출</button>
         </div>
     {% else %}
         <div class="p-2 overflow-auto" style="height: 15rem;">
@@ -28,35 +29,6 @@
         </div>
     {% endif %}
 
-    <script>
-        $(document).ready(function() {
-            // 클릭 이벤트를 감지하여 텍스트 수정
-            $(document).on('click', '.editable-text', function() {
-                var introduceText = $(this).text().trim();
-                var introduceInput = '<textarea class="form-control editing-text" rows="3">' + introduceText + '</textarea>';
-                $(this).html(introduceInput).find('textarea').focus().on('keypress', function(event) {
-                    if (event.keyCode === 13) {
-                        event.preventDefault();
-                        var newText = $(this).val().trim();
-                        var url = $(this).parent().data('url');
-                        $.ajax({
-                            type: 'POST',
-                            url: url,
-                            data: {
-                                'csrfmiddlewaretoken': $('[name="csrfmiddlewaretoken"]').val(),
-                                'introduce': newText,
-                            },
-                            success: function(response) {
-                                $('.editable-text').text(newText);
-                            },
-                            error: function(xhr, errmsg, err) {
-                                console.error(xhr.status + ': ' + xhr.responseText);
-                            }
-                        });
-                    }
-                });
-            });
-        });
-    </script>
+    <script type="text/javascript" src="/static/js/introduce.js"></script>
 
 </div>

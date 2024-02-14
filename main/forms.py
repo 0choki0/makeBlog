@@ -8,10 +8,11 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ('title', 'content', 'image', 'tag', 'category',)
 
-class EditIntroduceForm(forms.Form):
+class EditIntroduceForm(forms.ModelForm):
     class Meta:
         model = Blog
-        fields = ('introduce')
+        fields = ('introduce',)
+    introduce = forms.CharField(widget=forms.Textarea(attrs={'rows': 5}))
 
 # 댓글 작성 폼
 class CommentForm(forms.ModelForm):
