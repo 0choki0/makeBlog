@@ -10,14 +10,17 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.core.paginator import Paginator
 
 # Create your views here.
+
+# 홈으로 보내는 기능
 def home(request):
     return redirect('home:home')
 
+# 블로그 메인 기능
 def main(request, username):
     try:
         owner = User.objects.get(username=username)
     except User.DoesNotExist:
-        return HttpResponse("Something went wrong.") 
+        return HttpResponse("잘못된 접근입니다.") 
     postlist = Post.objects.filter(user_id=owner.id)
     sorted_posts = postlist.all().order_by('-created_at')
     post = sorted_posts.first()

@@ -1,12 +1,13 @@
 from django import forms
 from .models import *
 
+# 포스트 작성 폼
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ('title', 'content', 'image', 'tag', 'category',)
 
-
+# 댓글 작성 폼
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
@@ -24,6 +25,7 @@ class CommentForm(forms.ModelForm):
             'content': '',
         }
 
+# 답글 작성 폼
 class ReplyForm(forms.ModelForm):
     class Meta:
         model = Reply
